@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% extends 'base.html' %}
+{% block title %}Главная — AdPortal{% endblock %}
+
+{% block content %}
+<div class="bg-primary text-white rounded-3 p-5 mb-4 shadow">
+    <h1 class="display-5 fw-bold">Рекламный портал</h1>
+    <p class="lead">Лучшие предложения от проверенных рекламодателей</p>
+    <form method="get" class="row g-2 mt-3">
+        <div class="col-md-8">
+            <input type="text" name="q" class="form-control form-control-lg"
+                   placeholder="Поиск по объявлениям..." value="{{ query }}">
+        </div>
+        <div class="col-md-4">
+            <button class="btn btn-light btn-lg w-100" type="submit">
+                <i class="bi bi-search"></i> Найти
+            </button>
+        </div>
+    </form>
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-funnel"></i> Категории</h5>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item {% if not current_category %}active{% endif %}">
+                        <a href="{% url 'ads:home' %}" class="text-decoration-none {% if not current_category %}text-white{% endif %}">Все</a>
+                    </li>
+                    {% for cat in categories %}
+                    <li class="list-group-item {% if current_category == cat.slug %}active{% endif %}">
+                        <a href="?category={{ cat.slug }}"
+                           class="text-decoration-none {% if current_category == cat.slug %}text-white{% endif %}">
+                            {{ cat.name }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-9">
+        {% if ads %}
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            {% for ad in ads %}
+            <div class="col">
+                <div class="card h-100 shadow-sm hover-shadow">
+                    {% if ad.image %}
+                    <img src="{{ ad.image.url }}" class="card-img-top" alt="{{ ad.title }}" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                    <div class="bg-light text-center py-5 text-muted">
+                        <i class="bi bi-image display-1"></i>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ ad.title }}</h5>
+                        <p class="card-text text-muted">{{ ad.description|truncatechars:120 }}</p>
+                        {% if ad.category %}
+                        <span class="badge bg-secondary">{{ ad.category.name }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer bg-transparent d-flex justify-content-between">
+                        <small class="text-muted"><i class="bi bi-eye"></i> {{ ad.views_count }}</small>
+                        <a href="{% url 'ads:ad_detail' ad.pk %}" class="btn btn-primary btn-sm">Подробнее</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="alert alert-info text-center">
+            <i class="bi bi-info-circle"></i> Объявлений не найдено
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}</title>
+</head>
+<body>
+
+</body>
+</html>

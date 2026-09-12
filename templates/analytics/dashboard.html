@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block title %}Статистика{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="bi bi-graph-up"></i> Статистика посещений</h1>
+    <a href="{% url 'analytics:export_excel' %}?period={{ current_period }}" class="btn btn-success">
+        <i class="bi bi-file-earmark-excel"></i> Выгрузить в Excel
+    </a>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-2">
+        <form method="get" class="d-grid gap-2">
+            {% for p in periods %}
+            <button type="submit" name="period" value="{{ p }}"
+                    class="btn {% if current_period == p %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                {% if p == 'day' %}День{% elif p == 'week' %}Неделя{% elif p == 'month' %}Месяц{% elif p == 'year' %}Год{% else %}Всё время{% endif %}
+            </button>
+            {% endfor %}
+        </form>
+    </div>
+    <div class="col-md-10">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="card text-white bg-primary shadow">
+                    <div class="card-body">
+                        <h6 class="card-title">Всего посещений</h6>
+                        <h2 class="mb-0">{{ total_visits }}</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card text-white bg-success shadow">
+                    <div class="card-body">
+                        <h6 class="card-title">Уникальных IP</h6>
+                        <h2 class="mb-0">{{ unique_ips }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-light"><h5 class="mb-0">Топ страниц</h5></div>
+            <div class="card-body">
+                <table class="table table-hover">
+                    <thead><tr><th>Путь</th><th class="text-end">Посещений</th></tr></thead>
+                    <tbody>
+                    {% for item in top_pages %}
+                    <tr><td><code>{{ item.path }}</code></td><td class="text-end fw-bold">{{ item.count }}</td></tr>
+                    {% empty %}
+                    <tr><td colspan="2" class="text-muted">Нет данных</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-light"><h5 class="mb-0">Топ объявлений</h5></div>
+            <div class="card-body">
+                <table class="table table-hover">
+                    <thead><tr><th>Объявление</th><th class="text-end">Просмотров</th></tr></thead>
+                    <tbody>
+                    {% for ad in top_ads %}
+                    <tr><td>{{ ad.title }}</td><td class="text-end fw-bold">{{ ad.views_count }}</td></tr>
+                    {% empty %}
+                    <tr><td colspan="2" class="text-muted">Нет данных</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

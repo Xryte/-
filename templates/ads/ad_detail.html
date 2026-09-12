@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}{{ ad.title }}{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'ads:home' %}">Главная</a></li>
+        <li class="breadcrumb-item active">{{ ad.title }}</li>
+    </ol>
+</nav>
+
+<div class="card shadow">
+    <div class="row g-0">
+        <div class="col-md-5">
+            {% if ad.image %}
+            <img src="{{ ad.image.url }}" class="img-fluid rounded-start h-100" style="object-fit: cover;" alt="{{ ad.title }}">
+            {% else %}
+            <div class="bg-light d-flex align-items-center justify-content-center h-100">
+                <i class="bi bi-image display-1 text-muted"></i>
+            </div>
+            {% endif %}
+        </div>
+        <div class="col-md-7">
+            <div class="card-body p-4">
+                <h1 class="card-title">{{ ad.title }}</h1>
+                {% if ad.category %}
+                <span class="badge bg-primary mb-3">{{ ad.category.name }}</span>
+                {% endif %}
+                <p class="card-text fs-5">{{ ad.description|linebreaks }}</p>
+                {% if ad.link %}
+                <a href="{{ ad.link }}" target="_blank" rel="noopener" class="btn btn-success btn-lg">
+                    <i class="bi bi-box-arrow-up-right"></i> Перейти к рекламодателю
+                </a>
+                {% endif %}
+                <hr>
+                <div class="text-muted small">
+                    <i class="bi bi-eye"></i> Просмотров: <strong>{{ ad.views_count }}</strong>
+                    <span class="ms-3"><i class="bi bi-calendar"></i> {{ ad.created_at|date:"d.m.Y" }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

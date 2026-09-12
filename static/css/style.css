@@ -1,0 +1,34 @@
+body {
+    background: #f5f7fa;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+main { flex: 1; }
+.hover-shadow {
+    transition: all .2s ease;
+}
+.hover-shadow:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important;
+}
+
+.toggle-password {
+    border-left: none;
+    background-color: #fff;
+}
+.toggle-password:hover {
+    background-color: #e9ecef;
+}
+.toggle-password:focus {
+    box-shadow: none;
+}
+.password-field {
+    border-right: none;
+}
+.password-field:focus {
+    border-right-color: #86b7fe;
+}
+.input-group:focus-within .toggle-password {
+    border-color: #86b7fe;
+}
